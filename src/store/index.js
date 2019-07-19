@@ -11,6 +11,6 @@ console.log(ChuckStoreModule)
 export const store = new Vuex.Store({
     modules: {
       ChuckStoreModule,
-      // TriviaStoreModule
+      TriviaStoreModule
     }
 });
