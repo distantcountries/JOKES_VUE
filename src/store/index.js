@@ -1,13 +1,16 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex from 'vuex';
 
+import { ChuckStoreModule } from './ChuckStoreModule'
+import { TriviaStoreModule } from './TriviaStoreModule'
+ 
+Vue.use(Vuex);
 
-Vue.use(Vuex)
+console.log(ChuckStoreModule)
 
-/* eslint-disable no-new */
-const store = new Vuex.Store({
-  modules: {
-  }
-})
-
-export default store
+export const store = new Vuex.Store({
+    modules: {
+      ChuckStoreModule,
+      // TriviaStoreModule
+    }
+});

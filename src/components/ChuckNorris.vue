@@ -1,12 +1,22 @@
 <template>
     <div>
         <div style="margin-top:1rem;">
-            <button type="button" class="btn btn-info" @click="getRandomJoke">Get New Joke</button><br>
+            <form @submit.prevent="getNewJoke">
+                <div style="width:30%; margin:auto;">
+                    <input 
+                        type="text" 
+                        class="form-control form-control-sm" 
+                        style="margin-bottom:0.5rem;" 
+                        placeholder="Category..."
+                        v-model="category"
+                    >
+                    <button type="submit" class="btn btn-info">Get New Joke</button><br>
+                </div>
+            </form>
             <div class="quotes">
                 <blockquote class="blockquote text-center">
                     <span style="margin-left:-100%; font-size:3rem;">"</span><br>
-                    <p style="margin:-2rem;">{{ joke.value.joke }}</p><br>
-                    <!-- <p style="margin:-2rem;">{{ joke }}</p><br> -->
+                    <p style="margin:-2rem;">{{ joke }}</p><br>
                     <span style="margin-left:100%; font-size:3rem;" >"</span>
                     <footer class="blockquote-footer"><cite title="Source Title" >Unknown</cite></footer>
                 </blockquote>
@@ -16,46 +26,36 @@
 </template>
 
 <script>
-import { chuckService } from '../services/ChuckService'
+import { store } from './../store';
+import { mapGetters } from 'vuex';
+
 export default {
+
     data() {
         return {
-            jokes:[], 
-            joke:'', 
-            // randomID: Math.floor((Math.random() * jokes.length) + 1)
+            category: ''
         }
     },
 
-    created() {
-        chuckService.getRandomJoke()
-        .then(response => {
-            this.joke = response.data
-            console.log(this.joke)
+    beforeRouteEnter(to, from, next) {
+        store.dispatch('callSetJoke').then(() => {
+            next()
         })
-        .catch(e => {
-            console.log('Error: get random joke!')
-        })
-    },
-
-    // beforeRouteEnter (to, from, next) {
-    //     next(vm => {
-    //         chuckService.getRandomJoke(vm.$route.params.id)
-    //         .then(response => { vm.joke = response.data })
-    //         .catch(error => { alert('Problem with getting joke');})
-    //     })
-    // },
+    }, 
 
     computed: {
-        joke() {
-            return this.$store.getters.getRandomJoke
-        }
+        ...mapGetters({
+            joke: 'getRandomJoke'
+        })
     },
 
     methods: {
-        getRandomJoke() {
-            console.log('test')
+        getNewJoke() {
+            // store.dispatch('callSetJoke');
+            this.$store.dispatch('callSetJoke', { category: this.category });
         }
     }
+
 }
 </script>
 
